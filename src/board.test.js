@@ -53,6 +53,11 @@ describe("Gameboard", () => {
     expect(gameboard.grid[1][1]).toMatchObject({ contains: null, hit: false });
   });
 
+  test("throws invalid on invalid ship placement", () => {
+    const gameboard = new Gameboard(3, 3);
+    expect(gameboard.placeShip({ x: 0, y: 1 }, { x: 3, y: 1 })).toThrow();
+  });
+
   test("placing a ship", () => {
     const gameboard = new Gameboard(3, 3);
     gameboard.placeShip([1, 1], [1.2], "horizontal");
@@ -66,12 +71,5 @@ describe("Gameboard", () => {
       hitCount: 0,
       sunk: false,
     });
-  });
-
-  test("throws invalid on invalid ship placement", () => {
-    const gameboard = new Gameboard(3, 3);
-    expect(gameboard.placeShip([1, 1], [3, 1], "horizontal")).toThrow();
-    expect(gameboard.placeShip([1, 1], [3, 1], "sth")).toThrow();
-    expect(gameboard.placeShip([1, 1], [3, 1], "horizontal")).toThrow();
   });
 });

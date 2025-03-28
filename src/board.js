@@ -25,12 +25,16 @@ class Gameboard {
     this.grid = this.generateGrid(height, width);
   }
 
-  placeShip(start, end, orientation) {
-    const len =
-      orientation === "horizontal"
-        ? end[1] - start[1] + 1
-        : end[0] - start[0] + 1;
-    const thisShip = new Ship(len);
+  placeShip(start, end) {
+    if (
+      !Array.isArray(start) ||
+      !Array.isArray(end) ||
+      start[0] + 1 > this.height ||
+      start[1] + 1 > this.width ||
+      end[0] + 1 > this.height ||
+      end[1] + 1 > this.width
+    )
+      throw new Error("start and end must be arrays");
   }
 
   generateGrid(height, width) {
