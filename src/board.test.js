@@ -55,12 +55,12 @@ describe("Gameboard", () => {
 
   test("throws invalid on invalid ship placement", () => {
     const gameboard = new Gameboard(3, 3);
-    expect(gameboard.placeShip({ x: 0, y: 1 }, { x: 3, y: 1 })).toThrow();
+    expect(() => gameboard.placeShip({ x: 0, y: 1 }, { x: 3, y: 1 })).toThrow();
   });
 
   test("placing a ship", () => {
     const gameboard = new Gameboard(3, 3);
-    gameboard.placeShip([1, 1], [1.2], "horizontal");
+    gameboard.placeShip({ x: 1, y: 1 }, { x: 1, y: 2 });
     expect(gameboard.grid[1][1].contains).toMatchObject({
       length: 2,
       hitCount: 0,
@@ -70,6 +70,30 @@ describe("Gameboard", () => {
       length: 2,
       hitCount: 0,
       sunk: false,
+    });
+  });
+
+  describe("validate array", () => {
+    const gameboard = new Gameboard(3, 3);
+
+    test("returns false with invalid coordinates", () => {
+      expect(gameboard.validateCoordinates({ x: 0, y: 3 })).toBe(false);
+    });
+
+    test("returns true with valid coordinates", () => {
+      expect(gameboard.validateCoordinates({ x: 0, y: 1 })).toBe(true);
+    });
+
+    test("true for multiple coordinates", () => {
+      expect(
+        gameboard.validateCoordinates({ x: 1, y: 1 }, { x: 1, y: 2 }),
+      ).toBe(true);
+    });
+
+    test("false with multiple coordinates", () => {
+      expect(
+        gameboard.validateCoordinates({ x: 1, y: 1 }, { x: 1, y: 3 }),
+      ).toBe(false);
     });
   });
 });

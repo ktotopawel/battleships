@@ -23,18 +23,57 @@ class Cell {
 class Gameboard {
   constructor(height, width) {
     this.grid = this.generateGrid(height, width);
+    this.height = height;
+    this.width = width;
   }
 
   placeShip(start, end) {
-    if (
-      !Array.isArray(start) ||
-      !Array.isArray(end) ||
-      start[0] + 1 > this.height ||
-      start[1] + 1 > this.width ||
-      end[0] + 1 > this.height ||
-      end[1] + 1 > this.width
-    )
-      throw new Error("start and end must be arrays");
+    if (!this.validateCoordinates(start, end))
+      throw new Error("invalid coordinates");
+
+    const cellArr = [];
+    let shipLength = 0;
+
+    if (start.x < end.x) {
+      shipLength = end.x - start.x + 1;
+      for (let i = start.x; i < shipLength; i++) {
+        cellArr.push(this.grid[start.y][i]);
+      }
+    } else if (start.y < end.y) {
+      shipLength = end.y - start.y + 1;
+      for (let i = start.x; i < shipLength; i++) {
+        cellArr.push(this.grid[i][start.x]);
+      }
+    } else if (JSON.stringify(start) === JSON.stringify(end)) {
+      shipLength = 1;
+      cellArr.push(this.grid[start.y][start.x]);
+    } else {
+      throw new Error("impossible ship placement");
+    }
+
+    console.log(cellArr);
+
+    const thisShip = new Ship(shipLength);
+
+    for (let i = 0; i < cellArr.length; i++) {
+      const cell = cellArr[i];
+      cell.contains = thisShip;
+    }
+  }
+
+  validateCoordinates(...args) {
+    const xArr = [];
+    const yArr = [];
+    for (let i = 0; i < args.length; i++) {
+      const element = args[i];
+      xArr.push(element.x);
+      yArr.push(element.y);
+    }
+
+    return (
+      xArr.every((x) => x < this.grid[0].length && x >= 0) &&
+      yArr.every((y) => y < this.grid.length && y >= 0)
+    );
   }
 
   generateGrid(height, width) {
