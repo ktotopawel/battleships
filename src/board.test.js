@@ -66,7 +66,7 @@ describe("Gameboard", () => {
       hitCount: 0,
       sunk: false,
     });
-    expect(gameboard.grid[1][2].contains).toMatchObject({
+    expect(gameboard.grid[2][1].contains).toMatchObject({
       length: 2,
       hitCount: 0,
       sunk: false,

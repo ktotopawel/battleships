@@ -36,12 +36,12 @@ class Gameboard {
 
     if (start.x < end.x) {
       shipLength = end.x - start.x + 1;
-      for (let i = start.x; i < shipLength; i++) {
+      for (let i = start.x; i <= shipLength; i++) {
         cellArr.push(this.grid[start.y][i]);
       }
     } else if (start.y < end.y) {
       shipLength = end.y - start.y + 1;
-      for (let i = start.x; i < shipLength; i++) {
+      for (let i = start.x; i <= shipLength; i++) {
         cellArr.push(this.grid[i][start.x]);
       }
     } else if (JSON.stringify(start) === JSON.stringify(end)) {
@@ -51,14 +51,14 @@ class Gameboard {
       throw new Error("impossible ship placement");
     }
 
-    console.log(cellArr);
-
     const thisShip = new Ship(shipLength);
 
     for (let i = 0; i < cellArr.length; i++) {
       const cell = cellArr[i];
       cell.contains = thisShip;
     }
+
+    console.log(cellArr);
   }
 
   validateCoordinates(...args) {
