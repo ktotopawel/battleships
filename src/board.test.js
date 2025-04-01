@@ -53,23 +53,45 @@ describe("Gameboard", () => {
     expect(gameboard.grid[1][1]).toMatchObject({ contains: null, hit: false });
   });
 
-  test("throws invalid on invalid ship placement", () => {
-    const gameboard = new Gameboard(3, 3);
-    expect(() => gameboard.placeShip({ x: 0, y: 1 }, { x: 3, y: 1 })).toThrow();
+  describe("recieve attack", () => {
+    let gameboard;
+
+    beforeAll(() => {
+      gameboard = new Gameboard(10, 10);
+      gameboard.placeShip({ y: 3, x: 3 }, { y: 3, x: 5 });
+      gameboard.placeShip({ y: 0, x: 0 }, { y: 0, x: 0 });
+      gameboard.placeShip({ y: 5, x: 5 }, { y: 9, x: 5 });
+    });
+
+    test("registers hit on an empty cell", () => {
+      expect(gameboard.recieveAttack({ y: 3, x: 2 })).toBe("missed!");
+      expect(gameboard.grid[3][2].hit).toBe(true);
+    });
+
+    test("returns already hit if cell already attacked", () => {});
   });
 
-  test("placing a ship", () => {
-    const gameboard = new Gameboard(3, 3);
-    gameboard.placeShip({ x: 1, y: 1 }, { x: 1, y: 2 });
-    expect(gameboard.grid[1][1].contains).toMatchObject({
-      length: 2,
-      hitCount: 0,
-      sunk: false,
+  describe("ship placing", () => {
+    test("throws invalid on invalid ship placement", () => {
+      const gameboard = new Gameboard(3, 3);
+      expect(() =>
+        gameboard.placeShip({ x: 0, y: 1 }, { x: 3, y: 1 }),
+      ).toThrow();
     });
-    expect(gameboard.grid[2][1].contains).toMatchObject({
-      length: 2,
-      hitCount: 0,
-      sunk: false,
+
+    test("placing a ship", () => {
+      const gameboard = new Gameboard(3, 3);
+      gameboard.placeShip({ x: 1, y: 1 }, { x: 1, y: 2 });
+      expect(gameboard.grid[1][1].contains).toMatchObject({
+        length: 2,
+        hitCount: 0,
+        sunk: false,
+      });
+      expect(gameboard.grid[2][1].contains).toMatchObject({
+        length: 2,
+        hitCount: 0,
+        sunk: false,
+      });
     });
   });
 

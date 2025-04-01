@@ -27,6 +27,14 @@ class Gameboard {
     this.width = width;
   }
 
+  recieveAttack(coordinates) {
+    const y = coordinates.y;
+    const x = coordinates.x;
+
+    this.grid[y][x].hit = true;
+    return "missed!";
+  }
+
   placeShip(start, end) {
     if (!this.validateCoordinates(start, end))
       throw new Error("invalid coordinates");
@@ -57,8 +65,6 @@ class Gameboard {
       const cell = cellArr[i];
       cell.contains = thisShip;
     }
-
-    console.log(cellArr);
   }
 
   validateCoordinates(...args) {
@@ -85,6 +91,7 @@ class Gameboard {
       }
       grid.push(row);
     }
+    console.log(grid);
     return grid;
   }
 }
