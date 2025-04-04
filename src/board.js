@@ -5,11 +5,15 @@ class Ship {
 
   hit() {
     this.hitCount++;
+    console.log(this.length, this.hitCount);
     this.isSunk();
   }
 
   isSunk() {
-    if (this.hitCount >= this.length) this.sunk = true;
+    if (this.hitCount >= this.length) {
+      this.sunk = true;
+      console.log(`ship (${this.length}) sunk`);
+    }
     return this.sunk;
   }
 }
@@ -30,40 +34,41 @@ class Gameboard {
   recieveAttack(coordinates) {
     const y = coordinates.y;
     const x = coordinates.x;
+    if (this.grid[y][x].hit === true) return "already hit";
+
+    if (this.grid[y][x].contains !== null) {
+      const ship = this.grid[y][x].contains;
+      ship.hit();
+      this.grid[y][x].hit = true;
+      console.log(`ship (${ship.length}) hit`);
+      return `hit`;
+    }
 
     this.grid[y][x].hit = true;
-    return "missed!";
+    return "miss";
   }
 
   placeShip(start, end) {
     if (!this.validateCoordinates(start, end))
       throw new Error("invalid coordinates");
 
-    const cellArr = [];
-    let shipLength = 0;
+    const isHorizontal = start.x === end.x;
+    const isVertical = start.y === end.y;
 
-    if (start.x < end.x) {
-      shipLength = end.x - start.x + 1;
-      for (let i = start.x; i <= shipLength; i++) {
-        cellArr.push(this.grid[start.y][i]);
+    if (!isHorizontal && !isVertical) throw new Error("invalid ship placement");
+
+    if (isHorizontal) {
+      const length = Math.abs(end.y - start.y + 1);
+      const thisShip = new Ship(length);
+      for (let y = start.y; y <= end.y; y++) {
+        this.grid[y][start.x].contains = thisShip;
       }
-    } else if (start.y < end.y) {
-      shipLength = end.y - start.y + 1;
-      for (let i = start.x; i <= shipLength; i++) {
-        cellArr.push(this.grid[i][start.x]);
-      }
-    } else if (JSON.stringify(start) === JSON.stringify(end)) {
-      shipLength = 1;
-      cellArr.push(this.grid[start.y][start.x]);
     } else {
-      throw new Error("impossible ship placement");
-    }
-
-    const thisShip = new Ship(shipLength);
-
-    for (let i = 0; i < cellArr.length; i++) {
-      const cell = cellArr[i];
-      cell.contains = thisShip;
+      const length = Math.abs(end.x - start.x + 1);
+      const thisShip = new Ship(length);
+      for (let x = start.x; x <= end.x; x++) {
+        this.grid[x][start.y].contains = thisShip;
+      }
     }
   }
 
@@ -91,7 +96,6 @@ class Gameboard {
       }
       grid.push(row);
     }
-    console.log(grid);
     return grid;
   }
 }

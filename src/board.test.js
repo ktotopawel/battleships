@@ -48,9 +48,17 @@ describe("Gameboard", () => {
     }
   });
 
-  test("random cell in board is a cell object", () => {
+  test("cell in board is a cell object", () => {
     const gameboard = new Gameboard(3, 3);
     expect(gameboard.grid[1][1]).toMatchObject({ contains: null, hit: false });
+  });
+
+  test("valid normal-size gameboard", () => {
+    const gameboard = new Gameboard(10, 10);
+    expect(gameboard.grid.length).toBe(10);
+    for (const row of gameboard.grid) {
+      expect(row.length).toBe(10);
+    }
   });
 
   describe("recieve attack", () => {
@@ -59,16 +67,33 @@ describe("Gameboard", () => {
     beforeAll(() => {
       gameboard = new Gameboard(10, 10);
       gameboard.placeShip({ y: 3, x: 3 }, { y: 3, x: 5 });
-      gameboard.placeShip({ y: 0, x: 0 }, { y: 0, x: 0 });
-      gameboard.placeShip({ y: 5, x: 5 }, { y: 9, x: 5 });
+      gameboard.placeShip({ y: 7, x: 3 }, { y: 9, x: 3 });
+    });
+
+    test("ship recieves attack", () => {
+      expect(gameboard.recieveAttack({ y: 3, x: 3 })).toBe("hit");
+      expect(gameboard.grid[3][3].contains).toMatchObject({
+        length: 3,
+        hitCount: 1,
+        sunk: false,
+      });
+    });
+
+    test("reports all sunk", () => {
+      gameboard.recieveAttack({ y: 7, x: 3 });
+      gameboard.recieveAttack({ y: 8, x: 3 });
+      expect(gameboard.recieveAttack({ y: 9, x: 3 })).toBe("all ships sunk");
     });
 
     test("registers hit on an empty cell", () => {
-      expect(gameboard.recieveAttack({ y: 3, x: 2 })).toBe("missed!");
-      expect(gameboard.grid[3][2].hit).toBe(true);
+      expect(gameboard.recieveAttack({ y: 2, x: 2 })).toBe("miss");
+      expect(gameboard.grid[2][2].hit).toBe(true);
     });
 
-    test("returns already hit if cell already attacked", () => {});
+    test("returns already hit if cell already attacked", () => {
+      gameboard.recieveAttack({ y: 3, x: 1 });
+      expect(gameboard.recieveAttack({ y: 3, x: 1 })).toBe("already hit");
+    });
   });
 
   describe("ship placing", () => {
@@ -79,9 +104,9 @@ describe("Gameboard", () => {
       ).toThrow();
     });
 
-    test("placing a ship", () => {
-      const gameboard = new Gameboard(3, 3);
-      gameboard.placeShip({ x: 1, y: 1 }, { x: 1, y: 2 });
+    test("placing a ship horizontally", () => {
+      const gameboard = new Gameboard(10, 10);
+      gameboard.placeShip({ x: 1, y: 1 }, { x: 2, y: 1 });
       expect(gameboard.grid[1][1].contains).toMatchObject({
         length: 2,
         hitCount: 0,
@@ -89,6 +114,26 @@ describe("Gameboard", () => {
       });
       expect(gameboard.grid[2][1].contains).toMatchObject({
         length: 2,
+        hitCount: 0,
+        sunk: false,
+      });
+    });
+
+    test("placing a ship vertically", () => {
+      const gameboard = new Gameboard(10, 19);
+      gameboard.placeShip({ y: 5, x: 7 }, { y: 7, x: 7 });
+      expect(gameboard.grid[5][7].contains).toMatchObject({
+        length: 3,
+        hitCount: 0,
+        sunk: false,
+      });
+      expect(gameboard.grid[6][7].contains).toMatchObject({
+        length: 3,
+        hitCount: 0,
+        sunk: false,
+      });
+      expect(gameboard.grid[7][7].contains).toMatchObject({
+        length: 3,
         hitCount: 0,
         sunk: false,
       });
