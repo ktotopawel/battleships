@@ -1,8 +1,14 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { type } = require("os");
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import { type } from "os"; // remove this if unused
 
-module.exports = {
+import { fileURLToPath } from "url";
+
+// simulate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   entry: "./src/index.js",
   output: {
     filename: "main.js",

@@ -61,13 +61,20 @@ describe("Gameboard", () => {
     }
   });
 
+  test("reports all sunk", () => {
+    const gameboard = new Gameboard(10, 10);
+    gameboard.placeShip({ y: 7, x: 3 }, { y: 9, x: 3 });
+    gameboard.recieveAttack({ y: 7, x: 3 });
+    gameboard.recieveAttack({ y: 8, x: 3 });
+    expect(gameboard.recieveAttack({ y: 9, x: 3 })).toBe("all ships sunk");
+  });
+
   describe("recieve attack", () => {
     let gameboard;
 
     beforeAll(() => {
       gameboard = new Gameboard(10, 10);
       gameboard.placeShip({ y: 3, x: 3 }, { y: 3, x: 5 });
-      gameboard.placeShip({ y: 7, x: 3 }, { y: 9, x: 3 });
     });
 
     test("ship recieves attack", () => {
@@ -77,12 +84,6 @@ describe("Gameboard", () => {
         hitCount: 1,
         sunk: false,
       });
-    });
-
-    test("reports all sunk", () => {
-      gameboard.recieveAttack({ y: 7, x: 3 });
-      gameboard.recieveAttack({ y: 8, x: 3 });
-      expect(gameboard.recieveAttack({ y: 9, x: 3 })).toBe("all ships sunk");
     });
 
     test("registers hit on an empty cell", () => {

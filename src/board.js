@@ -31,6 +31,12 @@ class Gameboard {
     this.width = width;
   }
 
+  allShipsSunk() {
+    return this.grid.flat().every((cell) => {
+      return cell.contains ? cell.contains.sunk : true;
+    });
+  }
+
   recieveAttack(coordinates) {
     const y = coordinates.y;
     const x = coordinates.x;
@@ -41,6 +47,7 @@ class Gameboard {
       ship.hit();
       this.grid[y][x].hit = true;
       console.log(`ship (${ship.length}) hit`);
+      if (this.allShipsSunk()) return "all ships sunk";
       return `hit`;
     }
 
@@ -100,4 +107,16 @@ class Gameboard {
   }
 }
 
-export { Ship, Gameboard };
+class Player {
+  constructor(name, boardSize = 10) {
+    (this.name = name), (this.gameboard = new Gameboard(boardSize, boardSize));
+  }
+}
+
+class CPUPlayer extends Player {
+  constructor(name = "CPU", boardSize = 10) {
+    super(name, boardSize);
+  }
+}
+
+export { Ship, Gameboard, Player, CPUPlayer };
