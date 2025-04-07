@@ -131,6 +131,10 @@ header {
   position: relative;
 }
 
+.square.enemy {
+  cursor: pointer;
+}
+
 .square.enemy:hover {
   transform: scale(1.2);
   z-index: 2;
