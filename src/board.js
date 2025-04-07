@@ -59,22 +59,22 @@ class Gameboard {
     if (!this.validateCoordinates(start, end))
       throw new Error("invalid coordinates");
 
-    const isHorizontal = start.x === end.x;
-    const isVertical = start.y === end.y;
+    const isHorizontal = start.y === end.y;
+    const isVertical = start.x === end.x;
 
     if (!isHorizontal && !isVertical) throw new Error("invalid ship placement");
 
     if (isHorizontal) {
+      const length = Math.abs(end.x - start.x + 1);
+      const thisShip = new Ship(length);
+      for (let x = start.x; x <= end.x; x++) {
+        this.grid[start.y][x].contains = thisShip;
+      }
+    } else {
       const length = Math.abs(end.y - start.y + 1);
       const thisShip = new Ship(length);
       for (let y = start.y; y <= end.y; y++) {
         this.grid[y][start.x].contains = thisShip;
-      }
-    } else {
-      const length = Math.abs(end.x - start.x + 1);
-      const thisShip = new Ship(length);
-      for (let x = start.x; x <= end.x; x++) {
-        this.grid[x][start.y].contains = thisShip;
       }
     }
   }
@@ -109,7 +109,9 @@ class Gameboard {
 
 class Player {
   constructor(name, boardSize = 10) {
-    (this.name = name), (this.gameboard = new Gameboard(boardSize, boardSize));
+    (this.name = name),
+      (this.gameboard = new Gameboard(boardSize, boardSize)),
+      (this.isCurrentPlayer = false);
   }
 }
 
@@ -118,5 +120,20 @@ class CPUPlayer extends Player {
     super(name, boardSize);
   }
 }
+
+// class GameController {
+//   constructor(player1, player2) {
+//     (this.player1 = new Player(player1)), (this.player2 = new Player(player2));
+//   }
+
+//   changePlayer
+// }
+
+// class GameController1P extends GameController {
+//   constructor(player1) {
+//     super();
+//     (this.player1 = new Player(player1)), (this.player2 = new CPUPlayer());
+//   }
+// }
 
 export { Ship, Gameboard, Player, CPUPlayer };
