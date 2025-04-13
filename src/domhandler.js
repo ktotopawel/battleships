@@ -19,7 +19,9 @@ export default class BoardHandler {
           this.player1.gameboard.grid,
         );
       }
-    }, 3000);
+    }, 500);
+    const dialog = document.getElementById("player-switch");
+    dialog.showModal();
   }
 
   generateGrids(board, enemyBoard) {

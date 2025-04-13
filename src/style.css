@@ -77,6 +77,7 @@ h6 {
   --color-3: #5d6d7e;
   --color-4: #b3b9b1;
   --color-5: #edf1f2;
+  --highlight: #f34235;
 }
 
 body {
@@ -165,6 +166,46 @@ header {
 
 .fire::before {
   content: "🔥";
+}
+
+#player-switch {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 25%;
+  width: 25%;
+  text-align: center;
+  background: none;
+  border-radius: 1rem;
+  border: none;
+
+  h1 {
+    color: var(--color-5);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    font-size: 2rem;
+    background-color: var(--highlight);
+    filter: saturate(0.8);
+    color: var(--color-1);
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    outline: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+#player-switch::backdrop {
+  height: 100vh;
+  background: var(--color-1);
+  background: radial-gradient(circle, var(--color-1) 0%, var(--color-2) 100%);
+  background-repeat: no-repeat;
 }
 
 footer {

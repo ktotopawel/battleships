@@ -1,26 +1,32 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Battleships</title>
-  </head>
 
-  <body>
-    <header>
-      <div class="logo-name">
-        <h1 class="logo">🚢</h1>
-        <h1>Battleships</h1>
-      </div>
-      <div class="nav-btns">
-        <div>🧒 vs. 👩</div>
-        <div>🧒 vs. 🤖</div>
-      </div>
-    </header>
-    <div class="game">
-      <div class="my grid"></div>
-      <div class="enemy grid"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battleships</title>
+</head>
+
+<body>
+  <header>
+    <div class="logo-name">
+      <h1 class="logo">🚢</h1>
+      <h1>Battleships</h1>
     </div>
-    <footer>Copyright Paweł Juszczak 2025</footer>
-  </body>
+    <div class="nav-btns">
+      <div>🧒 vs. 👩</div>
+      <div>🧒 vs. 🤖</div>
+    </div>
+  </header>
+  <div class="game">
+    <div class="my grid"></div>
+    <div class="enemy grid"></div>
+  </div>
+  <dialog id="player-switch">
+    <h1>Switch Players</h1>
+    <button id="ready" autofocus onclick="document.getElementById('player-switch').close()">Ready</button>
+  </dialog>
+  <footer>Copyright Paweł Juszczak 2025</footer>
+</body>
+
 </html>
