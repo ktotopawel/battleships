@@ -121,19 +121,4 @@ class CPUPlayer extends Player {
   }
 }
 
-// class GameController {
-//   constructor(player1, player2) {
-//     (this.player1 = new Player(player1)), (this.player2 = new Player(player2));
-//   }
-
-//   changePlayer
-// }
-
-// class GameController1P extends GameController {
-//   constructor(player1) {
-//     super();
-//     (this.player1 = new Player(player1)), (this.player2 = new CPUPlayer());
-//   }
-// }
-
 export { Ship, Gameboard, Player, CPUPlayer };

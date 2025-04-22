@@ -1,27 +1,32 @@
-export default class BoardHandler {
+import { Player, CPUPlayer } from "./board.js";
+
+class BoardHandler {
   constructor(player1, player2) {
     this.player1 = player1;
     this.player2 = player2;
+    this.attackInProgress = false;
   }
 
   playerSwitch() {
+    if (!this.attackInProgress) return;
     this.player1.isCurrentPlayer = !this.player1.isCurrentPlayer;
     this.player2.isCurrentPlayer = !this.player2.isCurrentPlayer;
-    setTimeout(() => {
-      if (this.player1.isCurrentPlayer) {
-        this.generateGrids(
-          this.player1.gameboard.grid,
-          this.player2.gameboard.grid,
-        );
-      } else {
-        this.generateGrids(
-          this.player2.gameboard.grid,
-          this.player1.gameboard.grid,
-        );
-      }
-    }, 500);
+
+    if (this.player1.isCurrentPlayer) {
+      this.generateGrids(
+        this.player1.gameboard.grid,
+        this.player2.gameboard.grid,
+      );
+    } else {
+      this.generateGrids(
+        this.player2.gameboard.grid,
+        this.player1.gameboard.grid,
+      );
+    }
+
     const dialog = document.getElementById("player-switch");
     dialog.showModal();
+    this.attackInProgress = false;
   }
 
   generateGrids(board, enemyBoard) {
@@ -84,18 +89,49 @@ export default class BoardHandler {
         square.addEventListener(
           "click",
           function (e) {
+            if (this.attackInProgress) return;
             const coordinates = JSON.parse(e.target.id);
 
             if (this.player1.isCurrentPlayer) {
               this.player2.gameboard.recieveAttack(coordinates);
-              this.playerSwitch();
             } else {
               this.player1.gameboard.recieveAttack(coordinates);
-              this.playerSwitch();
             }
+            square.classList.add("attacked");
+            this.attackInProgress = true;
           }.bind(this),
         );
       }
     }
+  }
+}
+
+export class ButtonsHandler {
+  constructor(boardHandler) {
+    (this.button1p = document.getElementById("1p")),
+      (this.button2p = document.getElementById("2p"));
+    this.switchPlayer = document.getElementById("switch");
+    this.boardHandler = boardHandler;
+  }
+
+  bindStarts() {
+    this.button1p.addEventListener("click", () => console.log("p1"));
+    this.button2p.addEventListener("click", () => console.log("p2"));
+  }
+
+  bindSwitchPlayer() {
+    this.switchPlayer.addEventListener("click", () => {
+      console.log("switch");
+      this.boardHandler.playerSwitch();
+    });
+  }
+}
+
+export default class GameController {
+  constructor() {
+    (this.player1 = new Player()),
+      (this.player2 = new Player()),
+      (this.boardHandler = new BoardHandler(this.player1, this.player2)),
+      (this.buttonsHandler = new ButtonsHandler(this.boardHandler));
   }
 }
