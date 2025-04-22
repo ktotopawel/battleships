@@ -256,7 +256,12 @@ header {
   background-repeat: no-repeat;
 }
 
-.game-btns {
+#switch {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  align-items: center;
+  justify-content: center;
 }
 
 footer {
