@@ -5,14 +5,12 @@ class Ship {
 
   hit() {
     this.hitCount++;
-    console.log(this.length, this.hitCount);
     this.isSunk();
   }
 
   isSunk() {
     if (this.hitCount >= this.length) {
       this.sunk = true;
-      console.log(`ship (${this.length}) sunk`);
     }
     return this.sunk;
   }
@@ -25,10 +23,10 @@ class Cell {
 }
 
 class Gameboard {
-  constructor(height, width) {
-    this.grid = this.generateGrid(height, width);
-    this.height = height;
-    this.width = width;
+  constructor() {
+    this.grid = this.generateGrid(10, 10);
+    this.height = 10;
+    this.width = 10;
   }
 
   allShipsSunk() {
@@ -46,7 +44,6 @@ class Gameboard {
       const ship = this.grid[y][x].contains;
       ship.hit();
       this.grid[y][x].hit = true;
-      console.log(`ship (${ship.length}) hit`);
       if (this.allShipsSunk()) return "all ships sunk";
       return `hit`;
     }
@@ -113,9 +110,9 @@ class Gameboard {
 }
 
 class Player {
-  constructor(name, boardSize = 10) {
+  constructor(name) {
     (this.name = name),
-      (this.gameboard = new Gameboard(boardSize, boardSize)),
+      (this.gameboard = new Gameboard()),
       (this.isCurrentPlayer = false);
   }
 
@@ -125,7 +122,7 @@ class Player {
         x: Math.floor(Math.random() * 10),
         y: Math.floor(Math.random() * 10),
       };
-      const isHorizontal = Math.random > 0.5 ? true : false;
+      const isHorizontal = Math.random() > 0.5;
 
       const endCooridantes = isHorizontal
         ? { x: randomCoordinates.x + length - 1, y: randomCoordinates.y }
@@ -149,8 +146,8 @@ class Player {
 }
 
 class CPUPlayer extends Player {
-  constructor(name = "CPU", boardSize = 10) {
-    super(name, boardSize);
+  constructor(name = "CPU") {
+    super(name);
   }
 }
 

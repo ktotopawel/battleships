@@ -1,32 +1,13 @@
-import { Player, CPUPlayer } from "./board.js";
-
-class BoardHandler {
-  constructor(player1, player2) {
+export class BoardHandler {
+  constructor(player1, player2, handleTurn) {
     this.player1 = player1;
     this.player2 = player2;
-    this.attackInProgress = false;
+    this.handleTurn = handleTurn;
   }
 
   playerSwitch() {
-    if (!this.attackInProgress) return;
-    this.player1.isCurrentPlayer = !this.player1.isCurrentPlayer;
-    this.player2.isCurrentPlayer = !this.player2.isCurrentPlayer;
-
-    if (this.player1.isCurrentPlayer) {
-      this.generateGrids(
-        this.player1.gameboard.grid,
-        this.player2.gameboard.grid,
-      );
-    } else {
-      this.generateGrids(
-        this.player2.gameboard.grid,
-        this.player1.gameboard.grid,
-      );
-    }
-
     const dialog = document.getElementById("player-switch");
     dialog.showModal();
-    this.attackInProgress = false;
   }
 
   generateGrids(board, enemyBoard) {
@@ -89,21 +70,8 @@ class BoardHandler {
         square.addEventListener(
           "click",
           function (e) {
-            if (this.attackInProgress) return;
             const coordinates = JSON.parse(e.target.id);
-            let attacked = null;
-
-            if (this.player1.isCurrentPlayer) {
-              attacked = this.player2.gameboard.recieveAttack(coordinates);
-            } else {
-              attacked = this.player1.gameboard.recieveAttack(coordinates);
-            }
-            if (attacked === "hit") square.classList.add("attacked");
-            if (attacked === "miss") {
-              this.attackInProgress = true;
-              square.classList.add("miss");
-            }
-            if (attacked === "all ships sunk") this.gameOver();
+            this.handleTurn(coordinates, square);
           }.bind(this),
         );
       }
@@ -121,8 +89,8 @@ class BoardHandler {
   }
 }
 
-class ButtonsHandler {
-  constructor(boardHandler, startGame) {
+export class ButtonsHandler {
+  constructor(boardHandler, startGame, switchPlayersFn) {
     (this.button1p = document.getElementById("1p")),
       (this.button2p = document.getElementById("2p"));
     this.switchPlayer = document.getElementById("switch");
@@ -131,6 +99,7 @@ class ButtonsHandler {
     this.bindSwitchPlayer();
     this.bindGameOverDialog();
     this.startGame = startGame;
+    this.switchPlayersFn = switchPlayersFn;
   }
 
   bindStarts() {
@@ -140,8 +109,7 @@ class ButtonsHandler {
 
   bindSwitchPlayer() {
     this.switchPlayer.addEventListener("click", () => {
-      console.log("switch");
-      this.boardHandler.playerSwitch();
+      this.switchPlayersFn();
     });
   }
 
@@ -152,33 +120,5 @@ class ButtonsHandler {
       gameOverDialog.close();
       this.startGame(false);
     });
-  }
-}
-
-export default class GameController {
-  constructor() {
-    (this.player1 = new Player()),
-      (this.player2 = new Player()),
-      (this.boardHandler = new BoardHandler(this.player1, this.player2)),
-      (this.buttonsHandler = new ButtonsHandler(
-        this.boardHandler,
-        this.startGame.bind(this),
-      ));
-  }
-
-  startGame(is1p) {
-    this.player1 = new Player();
-    this.player2 = is1p ? new CPUPlayer() : new Player();
-
-    this.boardHandler.updatePlayers(this.player1, this.player2);
-
-    this.player1.randomizePlacement();
-    this.player1.isCurrentPlayer = true;
-    this.player2.randomizePlacement();
-
-    this.boardHandler.generateGrids(
-      this.player1.gameboard.grid,
-      this.player2.gameboard.grid,
-    );
   }
 }

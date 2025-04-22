@@ -1,5 +1,5 @@
 import "./style.css";
-import GameController from "./domhandler.js";
+import GameController from "./gamecontroller.js";
 
 const newGame = new GameController();
 
