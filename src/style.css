@@ -264,6 +264,42 @@ header {
   justify-content: center;
 }
 
+#game-over {
+  position: absolute;
+  margin: auto;
+  border: none;
+  background: none;
+  outline: none;
+  text-align: center;
+  color: var(--color-5);
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  p {
+    font-size: 2rem;
+  }
+
+  button {
+    margin-top: 1rem;
+    background: var(--highlight);
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: var(--color-5);
+    border: none;
+    border-radius: 0.5rem;
+    filter: saturate(0.8);
+    cursor: pointer;
+  }
+}
+
+#game-over::backdrop {
+  height: 100vh;
+  background: var(--color-1);
+}
+
 footer {
   position: absolute;
   width: 100%;
