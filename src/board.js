@@ -1,3 +1,5 @@
+import js from "@eslint/js";
+
 class Ship {
   constructor(len) {
     (this.length = len), (this.hitCount = 0), (this.sunk = false);
@@ -146,8 +148,29 @@ class Player {
 }
 
 class CPUPlayer extends Player {
-  constructor(name = "CPU") {
-    super(name);
+  constructor() {
+    super();
+    this.hits = [];
+  }
+
+  makeMove() {
+    const availableCells = [];
+
+    // Find all unattacked cells
+    for (let y = 0; y < 10; y++) {
+      for (let x = 0; x < 10; x++) {
+        if (!this.gameboard.grid[y][x].hit) {
+          availableCells.push({ x, y });
+        }
+      }
+    }
+
+    // Pick a random available cell
+    if (availableCells.length > 0) {
+      return availableCells[Math.floor(Math.random() * availableCells.length)];
+    } else {
+      throw new Error("No valid moves left!"); // Should never happen in a valid game
+    }
   }
 }
 
