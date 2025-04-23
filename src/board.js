@@ -1,5 +1,3 @@
-import js from "@eslint/js";
-
 class Ship {
   constructor(len) {
     (this.length = len), (this.hitCount = 0), (this.sunk = false);
